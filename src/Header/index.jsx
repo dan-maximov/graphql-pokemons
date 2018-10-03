@@ -101,6 +101,7 @@ const Title = styled(Link)`
 const SearchLoadingWrapper = styled.div`
   display: flex;
   justify-content: center;
+  transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
   align-items: center;
   height: 52px;
   width: 270px;
@@ -109,6 +110,9 @@ const SearchLoadingWrapper = styled.div`
   top: 51px;
   left: 188px;
   background: #2c387e;
+  &:hover {
+    background: #323e85;
+  }
   @media (max-width: 600px) {
     width: calc(100% - 48px);
     top: 42px;
@@ -118,6 +122,10 @@ const SearchLoadingWrapper = styled.div`
 `
 
 class Header extends Component {
+  constructor() {
+    super()
+    this.clearSearch = this.clearSearch.bind(this)
+  }
   state = {
     search: ''
   }
@@ -139,6 +147,9 @@ class Header extends Component {
     }
     return 'calc(100vw - 48px)'
   }
+  clearSearch() {
+    this.setState({ search: '' })
+  }
   render() {
     return (
       <AppBar style={{ position: 'static' }}>
@@ -155,10 +166,11 @@ class Header extends Component {
                 placeholder="Search…"
                 disableUnderline
                 onChange={e => this.setState({ search: e.target.value })}
+                value={this.state.search}
               />
             </SearchBody>
           </Search>
-          {this.state.search.length > 0 ? (
+          {this.state.search.length > 0 && (
             <Query query={GET_POKE_LIST}>
               {({ loading, error, data }) => {
                 if (loading)
@@ -178,39 +190,21 @@ class Header extends Component {
                     .toLowerCase()
                     .includes(this.state.search.toLowerCase())
                 )
-                const pokemons = []
-                if (filtered.length > 5) {
-                  for (let i = 0; i < 5; ) {
-                    pokemons.push(
-                      <Item
-                        filtered={filtered}
-                        i={i}
-                        getTop={this.getTop}
-                        getWidth={this.getWidth}
-                        getButtonWidth={this.getButtonWidth}
-                      />
-                    )
-                    i++
-                  }
-                } else {
-                  for (let i = 0; i < filtered.length; ) {
-                    pokemons.push(
-                      <Item
-                        filtered={filtered}
-                        i={i}
-                        getTop={this.getTop}
-                        getWidth={this.getWidth}
-                        getButtonWidth={this.getButtonWidth}
-                      />
-                    )
-                    i++
-                  }
-                }
+                const pokemons = filtered
+                  .slice(0, 5)
+                  .map((item, index) => (
+                    <Item
+                      item={item}
+                      index={index}
+                      getTop={this.getTop}
+                      getWidth={this.getWidth}
+                      getButtonWidth={this.getButtonWidth}
+                      clearSearch={this.clearSearch}
+                    />
+                  ))
                 return pokemons
               }}
             </Query>
-          ) : (
-            ''
           )}
         </Toolbar>
       </AppBar>

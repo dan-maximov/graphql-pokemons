@@ -28,7 +28,7 @@ const SearchLoadingWrapper = styled.div`
 const SearchChildBody = styled.div`
   transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
   &:hover {
-    background: rgba(44, 56, 126, 0.1);
+    background: rgba(101, 115, 195, 0.1);
   }
 `
 
@@ -42,28 +42,30 @@ class Item extends Component {
   render() {
     const { classes } = this.props
     return (
-      <SearchLoadingWrapper style={{ top: this.props.getTop(this.props.i) }}>
+      <SearchLoadingWrapper
+        style={{ top: this.props.getTop(this.props.index) }}
+      >
         <ButtonBase
           style={{
             width: this.props.getButtonWidth(),
             textAlign: 'start'
           }}
           component={Link}
-          to={`/${this.props.filtered[this.props.i].name}`}
-          onClick={() => this.setState({ search: '' })}
+          to={`/${this.props.item.name}`}
+          onClick={() => this.props.clearSearch()}
         >
           <SearchChildBody>
             <CardHeader
               avatar={
                 <Avatar
-                  alt={this.props.filtered[this.props.i].name}
-                  src={this.props.filtered[this.props.i].image}
+                  alt={this.props.item.name}
+                  src={this.props.item.image}
                 />
               }
               classes={{
                 title: classes.title
               }}
-              title={this.props.filtered[this.props.i].name}
+              title={this.props.item.name}
               style={{
                 width: this.props.getWidth(),
                 padding: '2px 5px',
