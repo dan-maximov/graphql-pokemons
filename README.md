@@ -1,1 +1,1 @@
-[Live demo](http://meatspincom.github.io/graphql-pokemons)
+[Live demo](https://graphql-pokemons-rlwmmvrhbj.now.sh/)
