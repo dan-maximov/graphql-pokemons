@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import gql from 'graphql-tag'
-import { Query } from 'react-apollo'
-import GridList from '@material-ui/core/GridList'
-import styled from 'styled-components'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Poke from './poke'
+import React, { Component } from 'react';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import GridList from '@material-ui/core/GridList';
+import styled from 'styled-components';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Poke from './poke';
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: space-around;
-`
+`;
 
 const GET_POKE_LIST = gql`
   {
@@ -24,35 +24,37 @@ const GET_POKE_LIST = gql`
       image
     }
   }
-`
+`;
 class List extends Component {
   state = {
     first: 30
-  }
-  wrapper = React.createRef
+  };
+  wrapper = React.createRef;
   handleScroll = () => {
+    const { first } = this.state;
     if (
       window.scrollY + window.innerHeight >
       document.body.offsetHeight - 250
     ) {
-      if (this.state.first + 30 > 151) {
+      if (first + 30 > 151) {
         this.setState({
           first: 151
-        })
-        return
+        });
+        return;
       }
-      if (this.state.first === 151) {
-        return
+      if (first === 151) {
+        return;
       }
       this.setState(prevState => ({
         first: prevState.first + 30
-      }))
+      }));
     }
-  }
+  };
   componentDidMount() {
-    window.addEventListener('scroll', this.handleScroll, true)
+    window.addEventListener('scroll', this.handleScroll, true);
   }
   render() {
+    const { first } = this.state;
     return (
       <GridList
         cellWidth={300}
@@ -70,21 +72,23 @@ class List extends Component {
         >
           <Query query={GET_POKE_LIST}>
             {({ loading, error, data }) => {
-              if (loading)
-                return <CircularProgress style={{ marginTop: '10px' }} />
-              if (error) return `Error! ${error.message}`
-              const pokemons = []
-              for (let i = 0; i < this.state.first; ) {
-                pokemons.push(<Poke data={data} i={i} />)
-                i++
+              if (loading) {
+                return <CircularProgress style={{ marginTop: '10px' }} />;
               }
-              return pokemons
+              if (error) {
+                return `Error! ${error.message}`;
+              }
+              const Pokemons = data.pokemons
+                .slice(0, first)
+                .map(poke => <Poke poke={poke} />);
+              console.log(Pokemons);
+              return Pokemons;
             }}
           </Query>
         </Wrapper>
       </GridList>
-    )
+    );
   }
 }
 
-export default List
+export default List;

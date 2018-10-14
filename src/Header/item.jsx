@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import ButtonBase from '@material-ui/core/ButtonBase'
-import Avatar from '@material-ui/core/Avatar'
-import CardHeader from '@material-ui/core/CardHeader'
-import { withStyles } from '@material-ui/core/styles'
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import ButtonBase from '@material-ui/core/ButtonBase';
+import Avatar from '@material-ui/core/Avatar';
+import CardHeader from '@material-ui/core/CardHeader';
+import { withStyles } from '@material-ui/core/styles';
 
 const SearchLoadingWrapper = styled.div`
   display: flex;
@@ -23,51 +23,52 @@ const SearchLoadingWrapper = styled.div`
     height: 43px;
     left: 16px;
   }
-`
+`;
 
 const SearchChildBody = styled.div`
   transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
   &:hover {
     background: rgba(101, 115, 195, 0.1);
   }
-`
+`;
 
 const classes = {
   title: {
     color: '#fff'
   }
-}
+};
 
 class Item extends Component {
   render() {
-    const { classes } = this.props
+    const {
+      classes,
+      getTop,
+      clearSearch,
+      item,
+      getWidth,
+      getButtonWidth,
+      index
+    } = this.props;
     return (
-      <SearchLoadingWrapper
-        style={{ top: this.props.getTop(this.props.index) }}
-      >
+      <SearchLoadingWrapper style={{ top: getTop(index) }}>
         <ButtonBase
           style={{
-            width: this.props.getButtonWidth(),
+            width: getButtonWidth(),
             textAlign: 'start'
           }}
           component={Link}
-          to={`/${this.props.item.name}`}
-          onClick={() => this.props.clearSearch()}
+          to={`/${item.name}`}
+          onClick={() => clearSearch()}
         >
           <SearchChildBody>
             <CardHeader
-              avatar={
-                <Avatar
-                  alt={this.props.item.name}
-                  src={this.props.item.image}
-                />
-              }
+              avatar={<Avatar alt={item.name} src={item.image} />}
               classes={{
                 title: classes.title
               }}
-              title={this.props.item.name}
+              title={item.name}
               style={{
-                width: this.props.getWidth(),
+                width: getWidth(),
                 padding: '2px 5px',
                 color: '#fff'
               }}
@@ -75,8 +76,8 @@ class Item extends Component {
           </SearchChildBody>
         </ButtonBase>
       </SearchLoadingWrapper>
-    )
+    );
   }
 }
 
-export default withStyles(classes)(Item)
+export default withStyles(classes)(Item);

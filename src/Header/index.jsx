@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import gql from 'graphql-tag'
-import { Query } from 'react-apollo'
-import { Link } from 'react-router-dom'
-import styled from 'styled-components'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import SearchIcon from '@material-ui/icons/Search'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Item from './item'
+import React, { Component } from 'react';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import SearchIcon from '@material-ui/icons/Search';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Item from './item';
 
 const GET_POKE_LIST = gql`
   {
@@ -16,7 +16,7 @@ const GET_POKE_LIST = gql`
       image
     }
   }
-`
+`;
 
 const Search = styled.div`
   position: relative;
@@ -32,7 +32,7 @@ const Search = styled.div`
     width: auto;
     margin-left: 24px;
   }
-`
+`;
 
 const SearchBody = styled.div`
   color: inherit;
@@ -44,7 +44,7 @@ const SearchBody = styled.div`
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   line-height: 1.1875em;
   align-items: center;
-`
+`;
 
 const Input = styled.input`
   font: inherit;
@@ -68,7 +68,7 @@ const Input = styled.input`
   &::placeholder {
     color: #a0a9da;
   }
-`
+`;
 
 const SearchIconBody = styled.div`
   width: 72px;
@@ -78,7 +78,7 @@ const SearchIconBody = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
+`;
 
 const Title = styled(Link)`
   text-decoration: none;
@@ -96,7 +96,7 @@ const Title = styled(Link)`
   @media (max-width: 600px) {
     display: none;
   }
-`
+`;
 
 const SearchLoadingWrapper = styled.div`
   display: flex;
@@ -119,38 +119,39 @@ const SearchLoadingWrapper = styled.div`
     height: 43px;
     left: 16px;
   }
-`
+`;
 
 class Header extends Component {
   constructor() {
-    super()
-    this.clearSearch = this.clearSearch.bind(this)
+    super();
+    this.clearSearch = this.clearSearch.bind(this);
   }
   state = {
     search: ''
-  }
+  };
   getTop = index => {
     if (window.innerWidth < 600) {
-      return 42 * (index + 1)
+      return 42 * (index + 1);
     }
-    return 51 * (index + 1)
-  }
+    return 51 * (index + 1);
+  };
   getWidth() {
     if (window.innerWidth > 600) {
-      return '260px'
+      return '260px';
     }
-    return 'calc(100vw - 58px)'
+    return 'calc(100vw - 58px)';
   }
   getButtonWidth() {
     if (window.innerWidth > 600) {
-      return '270px'
+      return '270px';
     }
-    return 'calc(100vw - 48px)'
+    return 'calc(100vw - 48px)';
   }
   clearSearch() {
-    this.setState({ search: '' })
+    this.setState({ search: '' });
   }
   render() {
+    const { search } = this.state;
     return (
       <AppBar style={{ position: 'static' }}>
         <Toolbar>
@@ -166,11 +167,11 @@ class Header extends Component {
                 placeholder="Search…"
                 disableUnderline
                 onChange={e => this.setState({ search: e.target.value })}
-                value={this.state.search}
+                value={search}
               />
             </SearchBody>
           </Search>
-          {this.state.search.length > 0 && (
+          {search.length > 0 && (
             <Query query={GET_POKE_LIST}>
               {({ loading, error, data }) => {
                 if (loading)
@@ -183,13 +184,11 @@ class Header extends Component {
                         }}
                       />
                     </SearchLoadingWrapper>
-                  )
-                if (error) return `Error! ${error.message}`
+                  );
+                if (error) return `Error! ${error.message}`;
                 const filtered = data.pokemons.filter(item =>
-                  item.name
-                    .toLowerCase()
-                    .includes(this.state.search.toLowerCase())
-                )
+                  item.name.toLowerCase().includes(search.toLowerCase())
+                );
                 const pokemons = filtered
                   .slice(0, 5)
                   .map((item, index) => (
@@ -201,15 +200,15 @@ class Header extends Component {
                       getButtonWidth={this.getButtonWidth}
                       clearSearch={this.clearSearch}
                     />
-                  ))
-                return pokemons
+                  ));
+                return pokemons;
               }}
             </Query>
           )}
         </Toolbar>
       </AppBar>
-    )
+    );
   }
 }
 
-export default Header
+export default Header;
