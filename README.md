@@ -1,1 +1,1 @@
-[Live demo](https://graphql-pokemons-axcguzbvmy.now.sh/)
+[Live demo](https://graphql-pokemons-bfnmaazxvm.now.sh/)
