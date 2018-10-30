@@ -136,18 +136,6 @@ class Header extends Component {
   state = {
     search: '',
   };
-  getTop = index => {
-    if (window.innerWidth < 600) {
-      return 42 * (index + 1);
-    }
-    return 51 * (index + 1);
-  };
-  getButtonWidth() {
-    if (window.innerWidth > 600) {
-      return '270px';
-    }
-    return 'calc(100vw - 48px)';
-  }
   clearSearch() {
     this.setState({ search: '' });
   }
