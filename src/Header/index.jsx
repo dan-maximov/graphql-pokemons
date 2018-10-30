@@ -107,17 +107,24 @@ const SearchLoadingWrapper = styled.div`
   width: 270px;
   position: absolute;
   z-index: 1;
-  top: 51px;
-  left: 188px;
   background: #2c387e;
   &:hover {
     background: #323e85;
   }
   @media (max-width: 600px) {
-    width: calc(100% - 48px);
-    top: 42px;
-    height: 43px;
-    left: 16px;
+    width: 100%;
+  }
+`;
+
+const ResultWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 270px;
+  position: absolute;
+  z-index: 1;
+  background: #2c387e;
+  @media (max-width: 600px) {
+    width: 100%;
   }
 `;
 
@@ -127,7 +134,7 @@ class Header extends Component {
     this.clearSearch = this.clearSearch.bind(this);
   }
   state = {
-    search: ''
+    search: '',
   };
   getTop = index => {
     if (window.innerWidth < 600) {
@@ -135,12 +142,6 @@ class Header extends Component {
     }
     return 51 * (index + 1);
   };
-  getWidth() {
-    if (window.innerWidth > 600) {
-      return '260px';
-    }
-    return 'calc(100vw - 58px)';
-  }
   getButtonWidth() {
     if (window.innerWidth > 600) {
       return '270px';
@@ -170,41 +171,34 @@ class Header extends Component {
                 value={search}
               />
             </SearchBody>
-          </Search>
-          {search.length > 0 && (
-            <Query query={GET_POKE_LIST}>
-              {({ loading, error, data }) => {
-                if (loading)
-                  return (
-                    <SearchLoadingWrapper>
-                      <CircularProgress
-                        style={{
-                          width: '25px',
-                          height: '25px'
-                        }}
-                      />
-                    </SearchLoadingWrapper>
+            {search.length > 0 && (
+              <Query query={GET_POKE_LIST}>
+                {({ loading, error, data }) => {
+                  if (loading)
+                    return (
+                      <SearchLoadingWrapper>
+                        <CircularProgress
+                          style={{
+                            width: '25px',
+                            height: '25px',
+                          }}
+                        />
+                      </SearchLoadingWrapper>
+                    );
+                  if (error) return `Error! ${error.message}`;
+                  const filtered = data.pokemons.filter(item =>
+                    item.name.toLowerCase().includes(search.toLowerCase()),
                   );
-                if (error) return `Error! ${error.message}`;
-                const filtered = data.pokemons.filter(item =>
-                  item.name.toLowerCase().includes(search.toLowerCase())
-                );
-                const pokemons = filtered
-                  .slice(0, 5)
-                  .map((item, index) => (
-                    <Item
-                      item={item}
-                      index={index}
-                      getTop={this.getTop}
-                      getWidth={this.getWidth}
-                      getButtonWidth={this.getButtonWidth}
-                      clearSearch={this.clearSearch}
-                    />
-                  ));
-                return pokemons;
-              }}
-            </Query>
-          )}
+                  const pokemons = filtered
+                    .slice(0, 5)
+                    .map((item, index) => (
+                      <Item item={item} clearSearch={this.clearSearch} />
+                    ));
+                  return <ResultWrapper>{pokemons}</ResultWrapper>;
+                }}
+              </Query>
+            )}
+          </Search>
         </Toolbar>
       </AppBar>
     );
